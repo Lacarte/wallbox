@@ -15,7 +15,7 @@ function init() {
     const h = container.clientHeight;
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f4f8);
+    scene.background = new THREE.Color(0x131820);
 
     camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
     camera.position.set(50, 40, 60);
@@ -40,8 +40,8 @@ function init() {
     dirLight.castShadow = true;
     scene.add(dirLight);
 
-    // Grid (Hidden by default or subtle)
-    const grid = new THREE.GridHelper(200, 50, 0xccd6e0, 0xeef2f5);
+    // Grid (Dark theme colors)
+    const grid = new THREE.GridHelper(200, 50, 0x2d3748, 0x1a202c);
     grid.position.y = -40; // below box
     scene.add(grid);
     window.gridHelper = grid; // Global ref for toggle
