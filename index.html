@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📦 Wall-Mounted Box Visualizer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>📦 Wall-Mounted Box Visualizer</h1>
+      <p class="subtitle">Interactive 3D with smooth progressive unfolding</p>
+    </header>
+    
+    <div class="main-layout">
+        <div id="canvas-container" class="canvas-container">
+            <div id="loading">Initialize WebGL...</div>
+        </div>
+        
+        <aside class="controls-panel">
+            <!-- Animation Control -->
+            <div class="control-card highlight-card">
+              <div class="card-header">
+                <h3>📦 Box Assembly</h3>
+                <span id="unfoldStatus" class="status-badge">Fully Open</span>
+              </div>
+              <div class="slider-group">
+                <input type="range" id="unfold" min="0" max="100" value="0" step="0.1" class="unfold-slider">
+                <div class="slider-labels">
+                    <span>Open</span>
+                    <span>Assembled</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dimensions -->
+            <div class="control-card">
+              <h3>📏 Dimensions (cm)</h3>
+              
+              <div class="control-group">
+                <label for="topWidth">Top Width</label>
+                <div class="slider-row">
+                    <input type="range" id="topWidth" min="10" max="50" value="30" step="0.5">
+                    <span id="val-topWidth" class="value-display">30.0</span>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="bottomWidth">Bottom Width</label>
+                <div class="slider-row">
+                    <input type="range" id="bottomWidth" min="10" max="50" value="20" step="0.5">
+                    <span id="val-bottomWidth" class="value-display">20.0</span>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="height">Height</label>
+                <div class="slider-row">
+                    <input type="range" id="height" min="10" max="50" value="25" step="0.5">
+                    <span id="val-height" class="value-display">25.0</span>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="depth">Depth</label>
+                <div class="slider-row">
+                    <input type="range" id="depth" min="5" max="30" value="15" step="0.5">
+                    <span id="val-depth" class="value-display">15.0</span>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="flapWidth">Flap Width</label>
+                <div class="slider-row">
+                    <input type="range" id="flapWidth" min="1" max="5" value="2" step="0.1">
+                    <span id="val-flapWidth" class="value-display">2.0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Specifications -->
+            <div class="control-card">
+              <h3>📊 Specifications</h3>
+              <div class="specs-grid">
+                  <div class="spec-item">
+                      <span class="spec-label">Total Width</span>
+                      <span id="spec-totalWidth" class="spec-value">-</span>
+                  </div>
+                  <div class="spec-item">
+                      <span class="spec-label">Total Height</span>
+                      <span id="spec-totalHeight" class="spec-value">-</span>
+                  </div>
+                  <div class="spec-item full-width">
+                      <span class="spec-label">Surface Area</span>
+                      <span id="spec-area" class="spec-value">-</span>
+                  </div>
+              </div>
+            </div>
+
+            <!-- View Controls -->
+            <div class="control-card">
+                <h3>👁️ View</h3>
+                <div class="button-grid">
+                    <button id="btn-reset-cam" class="btn secondary">Reset Camera</button>
+                    <button id="btn-auto-rotate" class="btn secondary">Auto-Rotate: Off</button>
+                    <button id="btn-wireframe" class="btn secondary">Wireframe</button>
+                    <button id="btn-grid" class="btn secondary">Toggle Grid</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="utils.js"></script>
+  <script src="box-geometry.js"></script>
+  <script src="animation.js"></script>
+  <script src="flat-pattern.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
