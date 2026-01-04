@@ -148,6 +148,18 @@ function setupEventListeners() {
     document.getElementById('chk-show-dimensions').addEventListener('change', (e) => {
         box.setDimensionsVisible(e.target.checked);
     });
+
+    // Checkbox: White Text
+    document.getElementById('chk-white-text').addEventListener('change', (e) => {
+        box.setWhiteText(e.target.checked);
+    });
+
+    // Slider: Text Size
+    document.getElementById('textSize').addEventListener('input', (e) => {
+        const scale = parseFloat(e.target.value);
+        document.getElementById('val-textSize').textContent = scale.toFixed(1) + 'x';
+        box.setTextSize(scale);
+    });
 }
 
 function updateBoxGeometry(rebuild = true) {

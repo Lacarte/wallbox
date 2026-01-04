@@ -240,7 +240,7 @@ class TrapezoidBox {
         this.addLabels();
     }
 
-    createTextSprite(text, fontSize = 48, color = '#333333') {
+    createTextSprite(text, fontSize = 48, color = '#ffffff') {
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
 
@@ -323,7 +323,7 @@ class TrapezoidBox {
                 const dim = dimensions[key];
                 // Create dimension text (combined width x height)
                 const dimText = `${dim.width} x ${dim.height}`;
-                const sprite = this.createTextSprite(dimText, 24, '#0066cc');
+                const sprite = this.createTextSprite(dimText, 24, '#4ade80');
                 sprite.position.set(0, -2, 0.6);
                 sprite.scale.set(6, 3, 1);
                 this.panels[key].add(sprite);
@@ -345,6 +345,98 @@ class TrapezoidBox {
             this.dimensionSprites.forEach(sprite => {
                 sprite.visible = visible;
             });
+        }
+    }
+
+    setTextSize(scale) {
+        this.textScale = scale;
+
+        // Update name sprites scale
+        if (this.nameSprites) {
+            this.nameSprites.forEach(sprite => {
+                sprite.scale.set(8 * scale, 4 * scale, 1);
+            });
+        }
+
+        // Update dimension sprites scale
+        if (this.dimensionSprites) {
+            this.dimensionSprites.forEach(sprite => {
+                sprite.scale.set(6 * scale, 3 * scale, 1);
+            });
+        }
+    }
+
+    setWhiteText(isWhite) {
+        this.isWhiteText = isWhite;
+        const nameColor = isWhite ? '#ffffff' : '#333333';
+        const dimColor = isWhite ? '#4ade80' : '#0066cc';
+
+        // Update name sprites
+        if (this.nameSprites) {
+            this.nameSprites.forEach(sprite => {
+                sprite.parent.remove(sprite);
+            });
+        }
+
+        // Update dimension sprites
+        if (this.dimensionSprites) {
+            this.dimensionSprites.forEach(sprite => {
+                sprite.parent.remove(sprite);
+            });
+        }
+
+        // Clear arrays
+        this.nameSprites = [];
+        this.dimensionSprites = [];
+
+        // Recreate labels with new colors
+        const labels = {
+            back: 'BACK',
+            lid: 'LID',
+            bottom: 'BOTTOM',
+            left: 'LEFT',
+            right: 'RIGHT',
+            front: 'FRONT',
+            lidFlap: 'Lid Flap',
+            leftFlap: 'Left Flap',
+            rightFlap: 'Right Flap'
+        };
+
+        for (let key in labels) {
+            if (this.panels[key]) {
+                const sprite = this.createTextSprite(labels[key], key.includes('Flap') ? 32 : 48, nameColor);
+                sprite.position.set(0, 0, 0.5);
+                this.panels[key].add(sprite);
+                this.nameSprites.push(sprite);
+            }
+        }
+
+        // Recreate dimension labels
+        const dx = (this.tw - this.bw) / 2;
+        const slantHeight = Math.sqrt(dx * dx + this.h * this.h);
+
+        const dimensions = {
+            back: { width: `${Math.round(this.tw)}/${Math.round(this.bw)} cm`, height: `${Math.round(this.h)} cm` },
+            lid: { width: `${Math.round(this.tw)} cm`, height: `${Math.round(this.d)} cm` },
+            bottom: { width: `${Math.round(this.bw)} cm`, height: `${Math.round(this.d)} cm` },
+            left: { width: `${Math.round(this.d)} cm`, height: `${Math.round(slantHeight)} cm` },
+            right: { width: `${Math.round(this.d)} cm`, height: `${Math.round(slantHeight)} cm` },
+            front: { width: `${Math.round(this.tw)}/${Math.round(this.bw)} cm`, height: `${Math.round(this.h)} cm` },
+            lidFlap: { width: `${Math.round(this.tw)} cm`, height: `${Math.round(this.fw)} cm` },
+            leftFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` },
+            rightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` }
+        };
+
+        for (let key in dimensions) {
+            if (this.panels[key]) {
+                const dim = dimensions[key];
+                const dimText = `${dim.width} x ${dim.height}`;
+                const sprite = this.createTextSprite(dimText, 24, dimColor);
+                sprite.position.set(0, -2, 0.6);
+                sprite.scale.set(6, 3, 1);
+                this.panels[key].add(sprite);
+                this.dimensionSprites.push(sprite);
+            }
         }
     }
 }
