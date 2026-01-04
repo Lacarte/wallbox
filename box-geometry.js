@@ -166,7 +166,7 @@ class TrapezoidBox {
         // Flaps extend in POSITIVE Y direction in parent's local space.
         // This means they extend toward the FRONT edge of each panel.
 
-        // 5. Lid Flap (attached to Lid)
+        // 5. Lid Flap (attached to Lid - front edge)
         // Lid's local Y+ points toward front edge (Z+ in world when closed)
         const lidFlapGeom = new THREE.PlaneGeometry(this.tw, this.fw);
         lidFlapGeom.translate(0, this.fw / 2, 0); // Origin at hinge edge, extends Y+
@@ -178,6 +178,22 @@ class TrapezoidBox {
         // Position at Lid Front Edge (local Y = d/2)
         this.panels.lidFlap.position.set(0, this.d / 2, 0);
         // Rotation handled by animation controller
+
+        // Lid Left Flap - attached to left side of lid
+        const lidLeftFlapGeom = new THREE.PlaneGeometry(this.fw, this.d);
+        lidLeftFlapGeom.translate(-this.fw / 2, 0, 0); // Origin at hinge, extends X-
+
+        this.panels.lidLeftFlap = new THREE.Mesh(lidLeftFlapGeom, createMat(this.colors.flap));
+        this.panels.lid.add(this.panels.lidLeftFlap);
+        this.panels.lidLeftFlap.position.set(-this.tw / 2, 0, 0); // Left edge of lid
+
+        // Lid Right Flap - attached to right side of lid
+        const lidRightFlapGeom = new THREE.PlaneGeometry(this.fw, this.d);
+        lidRightFlapGeom.translate(this.fw / 2, 0, 0); // Origin at hinge, extends X+
+
+        this.panels.lidRightFlap = new THREE.Mesh(lidRightFlapGeom, createMat(this.colors.flap));
+        this.panels.lid.add(this.panels.lidRightFlap);
+        this.panels.lidRightFlap.position.set(this.tw / 2, 0, 0); // Right edge of lid
 
         // 6. Side Flaps (attached to Sides)
         // Side panels have rotation.y = 90°, so their local X points toward world Z (front)
@@ -200,6 +216,23 @@ class TrapezoidBox {
         this.panels.right.add(this.panels.rightFlap);
         this.panels.rightFlap.position.set(this.d / 2, 0, 0); // Front edge of right panel
         // Rotation handled by animation controller
+
+        // 7. Bottom Flaps for Left and Right sides
+        // Left Bottom Flap - attached to bottom of left side
+        const leftBottomFlapGeom = new THREE.PlaneGeometry(this.d, this.fw);
+        leftBottomFlapGeom.translate(0, -this.fw / 2, 0); // Origin at hinge, extends Y-
+
+        this.panels.leftBottomFlap = new THREE.Mesh(leftBottomFlapGeom, createMat(this.colors.flap));
+        this.panels.left.add(this.panels.leftBottomFlap);
+        this.panels.leftBottomFlap.position.set(0, -slantHeight / 2, 0); // Bottom edge of left panel
+
+        // Right Bottom Flap - attached to bottom of right side
+        const rightBottomFlapGeom = new THREE.PlaneGeometry(this.d, this.fw);
+        rightBottomFlapGeom.translate(0, -this.fw / 2, 0); // Origin at hinge, extends Y-
+
+        this.panels.rightBottomFlap = new THREE.Mesh(rightBottomFlapGeom, createMat(this.colors.flap));
+        this.panels.right.add(this.panels.rightBottomFlap);
+        this.panels.rightBottomFlap.position.set(0, -slantHeight / 2, 0); // Bottom edge of right panel
 
         // FRONT Panel - Same shape as BACK (trapezoid), attached to bottom panel
         const frontShape = new THREE.Shape();
@@ -284,8 +317,12 @@ class TrapezoidBox {
             right: 'RIGHT',
             front: 'FRONT',
             lidFlap: 'Lid Flap',
+            lidLeftFlap: 'Lid L Flap',
+            lidRightFlap: 'Lid R Flap',
             leftFlap: 'Left Flap',
-            rightFlap: 'Right Flap'
+            rightFlap: 'Right Flap',
+            leftBottomFlap: 'L Bottom Flap',
+            rightBottomFlap: 'R Bottom Flap'
         };
 
         for (let key in labels) {
@@ -314,8 +351,12 @@ class TrapezoidBox {
             right: { width: `${Math.round(this.d)} cm`, height: `${Math.round(slantHeight)} cm` },
             front: { width: `${Math.round(this.tw)}/${Math.round(this.bw)} cm`, height: `${Math.round(this.h)} cm` },
             lidFlap: { width: `${Math.round(this.tw)} cm`, height: `${Math.round(this.fw)} cm` },
+            lidLeftFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(this.d)} cm` },
+            lidRightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(this.d)} cm` },
             leftFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` },
-            rightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` }
+            rightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` },
+            leftBottomFlap: { width: `${Math.round(this.d)} cm`, height: `${Math.round(this.fw)} cm` },
+            rightBottomFlap: { width: `${Math.round(this.d)} cm`, height: `${Math.round(this.fw)} cm` }
         };
 
         for (let key in dimensions) {
@@ -398,8 +439,12 @@ class TrapezoidBox {
             right: 'RIGHT',
             front: 'FRONT',
             lidFlap: 'Lid Flap',
+            lidLeftFlap: 'Lid L Flap',
+            lidRightFlap: 'Lid R Flap',
             leftFlap: 'Left Flap',
-            rightFlap: 'Right Flap'
+            rightFlap: 'Right Flap',
+            leftBottomFlap: 'L Bottom Flap',
+            rightBottomFlap: 'R Bottom Flap'
         };
 
         for (let key in labels) {
@@ -423,8 +468,12 @@ class TrapezoidBox {
             right: { width: `${Math.round(this.d)} cm`, height: `${Math.round(slantHeight)} cm` },
             front: { width: `${Math.round(this.tw)}/${Math.round(this.bw)} cm`, height: `${Math.round(this.h)} cm` },
             lidFlap: { width: `${Math.round(this.tw)} cm`, height: `${Math.round(this.fw)} cm` },
+            lidLeftFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(this.d)} cm` },
+            lidRightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(this.d)} cm` },
             leftFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` },
-            rightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` }
+            rightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` },
+            leftBottomFlap: { width: `${Math.round(this.d)} cm`, height: `${Math.round(this.fw)} cm` },
+            rightBottomFlap: { width: `${Math.round(this.d)} cm`, height: `${Math.round(this.fw)} cm` }
         };
 
         for (let key in dimensions) {

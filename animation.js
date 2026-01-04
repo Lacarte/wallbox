@@ -102,6 +102,16 @@ class UnfoldController {
         // At progress=1: +90° (Folded down into box)
         this.box.panels.lidFlap.rotation.x = (Math.PI / 2) * closeProgress;
 
+        // Lid Left Flap: Folds down on the left side of the lid
+        // At progress=0: 0° (Flat, coplanar with lid)
+        // At progress=1: +90° (Folded down into box)
+        this.box.panels.lidLeftFlap.rotation.y = (Math.PI / 2) * closeProgress;
+
+        // Lid Right Flap: Folds down on the right side of the lid
+        // At progress=0: 0° (Flat, coplanar with lid)
+        // At progress=1: -90° (Folded down into box)
+        this.box.panels.lidRightFlap.rotation.y = (-Math.PI / 2) * closeProgress;
+
         // Front Panel: Rotates up from bottom to meet lid flap
         // At progress=0: 0° (Flat, coplanar with bottom in 2D pattern)
         // At progress=1: -90° (Folded up to close the front of the box)
@@ -116,6 +126,16 @@ class UnfoldController {
         // At progress=0: -45° (halfway)
         // At progress=1: -90° (Fully folded inward)
         this.box.panels.rightFlap.rotation.y = (-Math.PI / 4) - (closeProgress * (Math.PI / 4)); // -45° to -90°
+
+        // Left Bottom Flap: Rotates inward under the bottom panel
+        // At progress=0: 0° (Flat, coplanar with left side)
+        // At progress=1: +90° (Folded inward under bottom)
+        this.box.panels.leftBottomFlap.rotation.x = (Math.PI / 2) * closeProgress;
+
+        // Right Bottom Flap: Rotates inward under the bottom panel
+        // At progress=0: 0° (Flat, coplanar with right side)
+        // At progress=1: +90° (Folded inward under bottom)
+        this.box.panels.rightBottomFlap.rotation.x = (Math.PI / 2) * closeProgress;
     }
 
     rotateAroundPivot(mesh, pivot, axis, angle) {
