@@ -240,7 +240,7 @@ class TrapezoidBox {
         this.addLabels();
     }
 
-    createTextSprite(text, fontSize = 48) {
+    createTextSprite(text, fontSize = 48, color = '#333333') {
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
 
@@ -252,7 +252,7 @@ class TrapezoidBox {
 
         // Draw text
         context.font = `bold ${fontSize}px Arial`;
-        context.fillStyle = '#333333';
+        context.fillStyle = color;
         context.textAlign = 'center';
         context.textBaseline = 'middle';
         context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -271,6 +271,10 @@ class TrapezoidBox {
     }
 
     addLabels() {
+        // Store label sprites for toggling
+        this.nameSprites = [];
+        this.dimensionSprites = [];
+
         // Label definitions: panel name -> display text
         const labels = {
             back: 'BACK',
@@ -287,12 +291,60 @@ class TrapezoidBox {
         for (let key in labels) {
             if (this.panels[key]) {
                 const sprite = this.createTextSprite(labels[key], key.includes('Flap') ? 32 : 48);
-
-                // Position the sprite slightly above the panel surface
                 sprite.position.set(0, 0, 0.5);
-
                 this.panels[key].add(sprite);
+                this.nameSprites.push(sprite);
             }
+        }
+
+        // Add dimension labels
+        this.addDimensionLabels();
+    }
+
+    addDimensionLabels() {
+        const dx = (this.tw - this.bw) / 2;
+        const slantHeight = Math.sqrt(dx * dx + this.h * this.h);
+
+        // Dimension definitions: panel -> dimensions to show
+        const dimensions = {
+            back: { width: `${Math.round(this.tw)}/${Math.round(this.bw)} cm`, height: `${Math.round(this.h)} cm` },
+            lid: { width: `${Math.round(this.tw)} cm`, height: `${Math.round(this.d)} cm` },
+            bottom: { width: `${Math.round(this.bw)} cm`, height: `${Math.round(this.d)} cm` },
+            left: { width: `${Math.round(this.d)} cm`, height: `${Math.round(slantHeight)} cm` },
+            right: { width: `${Math.round(this.d)} cm`, height: `${Math.round(slantHeight)} cm` },
+            front: { width: `${Math.round(this.tw)}/${Math.round(this.bw)} cm`, height: `${Math.round(this.h)} cm` },
+            lidFlap: { width: `${Math.round(this.tw)} cm`, height: `${Math.round(this.fw)} cm` },
+            leftFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` },
+            rightFlap: { width: `${Math.round(this.fw)} cm`, height: `${Math.round(slantHeight)} cm` }
+        };
+
+        for (let key in dimensions) {
+            if (this.panels[key]) {
+                const dim = dimensions[key];
+                // Create dimension text (combined width x height)
+                const dimText = `${dim.width} x ${dim.height}`;
+                const sprite = this.createTextSprite(dimText, 24, '#0066cc');
+                sprite.position.set(0, -2, 0.6);
+                sprite.scale.set(6, 3, 1);
+                this.panels[key].add(sprite);
+                this.dimensionSprites.push(sprite);
+            }
+        }
+    }
+
+    setNamesVisible(visible) {
+        if (this.nameSprites) {
+            this.nameSprites.forEach(sprite => {
+                sprite.visible = visible;
+            });
+        }
+    }
+
+    setDimensionsVisible(visible) {
+        if (this.dimensionSprites) {
+            this.dimensionSprites.forEach(sprite => {
+                sprite.visible = visible;
+            });
         }
     }
 }

@@ -138,6 +138,16 @@ function setupEventListeners() {
         // If auto-rotate is on, we must enable it in controls
         e.target.classList.toggle('active', autoRotate);
     });
+
+    // Checkbox: Show Panel Names
+    document.getElementById('chk-show-names').addEventListener('change', (e) => {
+        box.setNamesVisible(e.target.checked);
+    });
+
+    // Checkbox: Show Dimensions
+    document.getElementById('chk-show-dimensions').addEventListener('change', (e) => {
+        box.setDimensionsVisible(e.target.checked);
+    });
 }
 
 function updateBoxGeometry(rebuild = true) {
